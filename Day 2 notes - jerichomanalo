@@ -1,0 +1,26 @@
+Python Command
+Npm install/Npm run dev
+
+Kali Linux
+sudo su - admin privilege
+msfconsole - for penetration testing
+sudo systemctl enable --now ssh = for SSH pen testing
+diskmgmt.msc - disk management
+ncpa.cpl - network connections
+Storage Pool - Virtual Disk - Drive = disk drive creation
+
+Types of Backup
+Full backup - done on weekends
+Incremental backup - done once
+differential backup - done daily
+Nic teaming - merge lan cards
+
+Data is King, protect at all costs!
+Backup kinds 
+veeam, rubrik, backupexec, backula
+types of storage
+locally, cloud, somewhere else
+
+1000mb = 1gb
+1000gb = 1TB
+1000tb = 1PB
