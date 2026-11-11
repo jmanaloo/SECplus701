@@ -1,0 +1,14 @@
+
+Security Analyst Role
+
+As a Junior Security Analyst, also called a SOC Level 1 Analyst, you work in a 24/7 SOC team and mostly review the security alerts together with your colleagues.
+
+3 Way Handshake
+Syn - Ack - Syn/Ack - Establish
+CENA - Control C, Enable for SecureCRT
+Forward lookup - domain name to IP
+reverse lookup - IP to domain name
+PUKI - Public Key Infrastructure
+Load balancing - distributing network traffic to all servers to ensure high availability
+VAPT - Vulnerability Assessment and Penetration Testing
+For Active directory, Local > Global > User
