@@ -1,0 +1,424 @@
+Remove and reinstall wazzuh elastic
+SSL security can be faked
+Elk stack and wazzuh
+elastic search - syslog
+wazzuh - endpoint
+zabbix - network traffic monitoring
+Jumpserver - open source, replacement of PuTTY
+wazzuh.vmx install - i copied it if prompted
+wazuh credentials
+root
+c1sc0123
+to off firewall: systemctl stop firewalld.service
+to check ip: ip addr
+port checker: nmap -v (ip address) once port is checked, go to https://(ip address) 
+admin C1sc0123..
+SOAR connected with Shuffle - provides context on attacks and reports
+AI learning - teaching the AI to do your work basically
+chatgpt and claude - best AIs today
+manual way to AI, automation
+rpm red hat, deb ubuntu
+below is config of wazuh agent
+<!--
+  Wazuh - Agent - Default configuration for Windows
+  More info at: https://documentation.wazuh.com
+  Mailing list: https://groups.google.com/forum/#!forum/wazuh
+-->
+
+<ossec_config>
+
+  <client>
+    <server>
+      <address>0.0.0.0</address>
+      <port>1514</port>
+      <protocol>tcp</protocol>
+    </server>
+    <crypto_method>aes</crypto_method>
+    <notify_time>10</notify_time>
+    <time-reconnect>60</time-reconnect>
+    <auto_restart>yes</auto_restart>
+  </client>
+
+  <!-- Agent buffer options -->
+  <client_buffer>
+    <disabled>no</disabled>
+    <queue_size>5000</queue_size>
+    <events_per_second>500</events_per_second>
+  </client_buffer>
+
+  <!-- Log analysis -->
+  <localfile>
+    <location>Application</location>
+    <log_format>eventchannel</log_format>
+  </localfile>
+
+  <localfile>
+    <location>Security</location>
+    <log_format>eventchannel</log_format>
+    <query>Event/System[EventID != 5145 and EventID != 5156 and EventID != 5447 and
+      EventID != 4656 and EventID != 4658 and EventID != 4663 and EventID != 4660 and
+      EventID != 4670 and EventID != 4690 and EventID != 4703 and EventID != 4907 and
+      EventID != 5152 and EventID != 5157]</query>
+  </localfile>
+
+  <localfile>
+    <location>System</location>
+    <log_format>eventchannel</log_format>
+  </localfile>
+
+  <localfile>
+    <location>active-response\active-responses.log</location>
+    <log_format>syslog</log_format>
+  </localfile>
+
+  <!-- Policy monitoring -->
+  <rootcheck>
+    <disabled>no</disabled>
+    <windows_apps>./shared/win_applications_rcl.txt</windows_apps>
+    <windows_malware>./shared/win_malware_rcl.txt</windows_malware>
+  </rootcheck>
+
+  <!-- Security Configuration Assessment -->
+  <sca>
+    <enabled>yes</enabled>
+    <scan_on_start>yes</scan_on_start>
+    <interval>12h</interval>
+    <skip_nfs>yes</skip_nfs>
+  </sca>
+
+  <!-- File integrity monitoring -->
+  <syscheck>
+
+    <disabled>no</disabled>
+
+    <!-- Frequency that syscheck is executed default every 12 hours -->
+    <frequency>43200</frequency>
+
+    <!-- Default files to be monitored. -->
+    <directories recursion_level="0" restrict="regedit.exe$|system.ini$|win.ini$">%WINDIR%</directories>
+
+    <directories recursion_level="0" restrict="at.exe$|attrib.exe$|cacls.exe$|cmd.exe$|eventcreate.exe$|ftp.exe$|lsass.exe$|net.exe$|net1.exe$|netsh.exe$|reg.exe$|regedt32.exe|regsvr32.exe|runas.exe|sc.exe|schtasks.exe|sethc.exe|subst.exe$">%WINDIR%\SysNative</directories>
+    <directories recursion_level="0">%WINDIR%\SysNative\drivers\etc</directories>
+    <directories recursion_level="0" restrict="WMIC.exe$">%WINDIR%\SysNative\wbem</directories>
+    <directories recursion_level="0" restrict="powershell.exe$">%WINDIR%\SysNative\WindowsPowerShell\v1.0</directories>
+    <directories recursion_level="0" restrict="winrm.vbs$">%WINDIR%\SysNative</directories>
+
+    <!-- 32-bit programs. -->
+    <directories realtime="yes" check_all="yes" report_changes="yes">C:\Users\Administrator\Desktop\jericho</directories>
+    <directories recursion_level="0" restrict="at.exe$|attrib.exe$|cacls.exe$|cmd.exe$|eventcreate.exe$|ftp.exe$|lsass.exe$|net.exe$|net1.exe$|netsh.exe$|reg.exe$|regedit.exe$|regedt32.exe$|regsvr32.exe$|runas.exe$|sc.exe$|schtasks.exe$|sethc.exe$|subst.exe$">%WINDIR%\System32</directories>
+    <directories recursion_level="0">%WINDIR%\System32\drivers\etc</directories>
+    <directories recursion_level="0" restrict="WMIC.exe$">%WINDIR%\System32\wbem</directories>
+    <directories recursion_level="0" restrict="powershell.exe$">%WINDIR%\System32\WindowsPowerShell\v1.0</directories>
+    <directories recursion_level="0" restrict="winrm.vbs$">%WINDIR%\System32</directories>
+
+    <directories realtime="yes">%PROGRAMDATA%\Microsoft\Windows\Start Menu\Programs\Startup</directories>
+
+    <ignore>%PROGRAMDATA%\Microsoft\Windows\Start Menu\Programs\Startup\desktop.ini</ignore>
+
+    <ignore type="sregex">.log$|.htm$|.jpg$|.png$|.chm$|.pnf$|.evtx$</ignore>
+
+    <!-- Windows registry entries to monitor. -->
+    <windows_registry>HKEY_LOCAL_MACHINE\Software\Classes\batfile</windows_registry>
+    <windows_registry>HKEY_LOCAL_MACHINE\Software\Classes\cmdfile</windows_registry>
+    <windows_registry>HKEY_LOCAL_MACHINE\Software\Classes\comfile</windows_registry>
+    <windows_registry>HKEY_LOCAL_MACHINE\Software\Classes\exefile</windows_registry>
+    <windows_registry>HKEY_LOCAL_MACHINE\Software\Classes\piffile</windows_registry>
+    <windows_registry>HKEY_LOCAL_MACHINE\Software\Classes\AllFilesystemObjects</windows_registry>
+    <windows_registry>HKEY_LOCAL_MACHINE\Software\Classes\Directory</windows_registry>
+    <windows_registry>HKEY_LOCAL_MACHINE\Software\Classes\Folder</windows_registry>
+    <windows_registry arch="both">HKEY_LOCAL_MACHINE\Software\Classes\Protocols</windows_registry>
+    <windows_registry arch="both">HKEY_LOCAL_MACHINE\Software\Policies</windows_registry>
+    <windows_registry>HKEY_LOCAL_MACHINE\Security</windows_registry>
+    <windows_registry arch="both">HKEY_LOCAL_MACHINE\Software\Microsoft\Internet Explorer</windows_registry>
+
+    <windows_registry>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services</windows_registry>
+    <windows_registry>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\KnownDLLs</windows_registry>
+    <windows_registry>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\SecurePipeServers\winreg</windows_registry>
+
+    <windows_registry arch="both">HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run</windows_registry>
+    <windows_registry arch="both">HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunOnce</windows_registry>
+    <windows_registry>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunOnceEx</windows_registry>
+    <windows_registry arch="both">HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\URL</windows_registry>
+    <windows_registry arch="both">HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies</windows_registry>
+    <windows_registry arch="both">HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Windows</windows_registry>
+    <windows_registry arch="both">HKEY_LOCAL_MACHINE\Software\Microsoft\Windows NT\CurrentVersion\Winlogon</windows_registry>
+
+    <windows_registry arch="both">HKEY_LOCAL_MACHINE\Software\Microsoft\Active Setup\Installed Components</windows_registry>
+
+    <!-- Windows registry entries to ignore. -->
+    <registry_ignore>HKEY_LOCAL_MACHINE\Security\Policy\Secrets</registry_ignore>
+    <registry_ignore>HKEY_LOCAL_MACHINE\Security\SAM\Domains\Account\Users</registry_ignore>
+    <registry_ignore type="sregex">\Enum$</registry_ignore>
+    <registry_ignore>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\MpsSvc\Parameters\AppCs</registry_ignore>
+    <registry_ignore>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\MpsSvc\Parameters\PortKeywords\DHCP</registry_ignore>
+    <registry_ignore>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\MpsSvc\Parameters\PortKeywords\IPTLSIn</registry_ignore>
+    <registry_ignore>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\MpsSvc\Parameters\PortKeywords\IPTLSOut</registry_ignore>
+    <registry_ignore>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\MpsSvc\Parameters\PortKeywords\RPC-EPMap</registry_ignore>
+    <registry_ignore>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\MpsSvc\Parameters\PortKeywords\Teredo</registry_ignore>
+    <registry_ignore>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\PolicyAgent\Parameters\Cache</registry_ignore>
+    <registry_ignore>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunOnceEx</registry_ignore>
+    <registry_ignore>HKEY_LOCAL_MACHINE\System\CurrentControlSet\Services\ADOVMPPackage\Final</registry_ignore>
+
+    <!-- Frequency for ACL checking (seconds) -->
+    <windows_audit_interval>60</windows_audit_interval>
+
+    <!-- Nice value for Syscheck module -->
+    <process_priority>10</process_priority>
+
+    <!-- Maximum output throughput -->
+    <max_eps>50</max_eps>
+
+    <!-- Database synchronization settings -->
+    <synchronization>
+      <enabled>yes</enabled>
+      <interval>5m</interval>
+      <max_eps>10</max_eps>
+    </synchronization>
+  </syscheck>
+
+  <!-- System inventory -->
+  <wodle name="syscollector">
+    <disabled>no</disabled>
+    <interval>1h</interval>
+    <scan_on_start>yes</scan_on_start>
+    <hardware>yes</hardware>
+    <os>yes</os>
+    <network>yes</network>
+    <packages>yes</packages>
+    <ports all="no">yes</ports>
+    <processes>yes</processes>
+
+    <!-- Database synchronization settings -->
+    <synchronization>
+      <max_eps>10</max_eps>
+    </synchronization>
+  </wodle>
+
+  <!-- CIS policies evaluation -->
+  <wodle name="cis-cat">
+    <disabled>yes</disabled>
+    <timeout>1800</timeout>
+    <interval>1d</interval>
+    <scan-on-start>yes</scan-on-start>
+
+    <java_path>\\server\jre\bin\java.exe</java_path>
+    <ciscat_path>C:\cis-cat</ciscat_path>
+  </wodle>
+
+  <!-- Osquery integration -->
+  <wodle name="osquery">
+    <disabled>yes</disabled>
+    <run_daemon>yes</run_daemon>
+    <bin_path>C:\Program Files\osquery\osqueryd</bin_path>
+    <log_path>C:\Program Files\osquery\log\osqueryd.results.log</log_path>
+    <config_path>C:\Program Files\osquery\osquery.conf</config_path>
+    <add_labels>yes</add_labels>
+  </wodle>
+
+  <!-- Active response -->
+  <active-response>
+    <disabled>no</disabled>
+    <ca_store>wpk_root.pem</ca_store>
+    <ca_verification>yes</ca_verification>
+  </active-response>
+
+  <!-- Choose between plain or json format (or both) for internal logs -->
+  <logging>
+    <log_format>plain</log_format>
+  </logging>
+
+</ossec_config>
+
+<!-- END of Default Configuration. -->
+
+SCA - Security Configuration Assessment
+gpedit.msc - access group policy
+Levels 0–3 → "Just logs"
+
+Normal system behavior.
+Example:
+
+*User logged in
+
+*Service started
+
+*Cron job ran
+
+SOC action: Ignore / archive
+------------------------------------------------------------------
+Levels 4–6 → "Something changed"
+
+Not necessarily bad, but worth knowing.
+
+Examples:
+
+*File modified
+
+*New process started
+
+*USB plugged in
+
+SOC action: Review if unexpected
+-------------------------------------------------------------------------
+Levels 7–9 → "Suspicious"
+
+Looks like an attack pattern, but not confirmed.
+
+Examples:
+
+*3 failed SSH logins
+
+*Port scan detected
+
+*New admin command
+
+SOC action: Investigate
+------------------------------------------------------------------------------
+ Levels 10–12 → "Confirmed attack"
+
+This is where the real incidents begin.
+
+Examples:
+
+*SSH brute force
+
+*Web attack signature
+
+*Privilege escalation
+
+SOC action: Incident response
+------------------------------------------------------------------------------
+Levels 13–15 → "Critical breach"
+
+System is probably compromised.
+
+Examples:
+
+Rootkit found
+
+Malware detected
+
+System binary modified
+
+SOC action:
+
+Isolate system, block IP, forensics
+
+Delete browsing data to ensure hackers wont hack
+!@ELASTIC
+root
+C1sc0123
+systemctl restart elasticsearch.service
+ip addr
+
+f1k:
+enable
+conf t
+int g1
+ip addr dhcp
+no shut
+end
+
+sh ip int bri
+
+conf t
+logging on
+logging host 208.8.8.133 transport udp port 9001
+logging trap informational
+end
+
+conf t
+archive
+log config
+logging enable
+notify syslog
+end
+
+conf t
+login on-failure log
+login on-success log
+
+config t
+NO ip access-list standard NOPORN
+ip access-list standard NOPORN
+DENY 66.254.0.0 0.0.255.255  log
+deny 161.49.0.0 0.0.255.255  log
+DENY 104.21.0.0 0.0.255.255  log
+DENY 68.235.0.0 0.0.255.255  log
+DENY 104.17.0.0 0.0.255.255  log
+DENY 88.208.0.0 0.0.255.255  log
+DENY 208.77.0.0 0.0.255.255  log
+DENY 172.67.0.0 0.0.255.255  log
+DENY 172.66.0.0 0.0.255.255  log
+DENY 162.159.0.0 0.0.255.255 log
+Permit Any
+Int Gi 1
+ ip access-group NOPORN in
+end
+
+config t
+access-list 100 deny ip any host 208.8.8.34 log
+access-list 100 permit ip any any
+interface GigabitEthernet1
+ip access-group 100 in
+end
+
+###get back the ping and able to ssh again
+config t
+interface GigabitEthernet0/0
+no ip access-group 100 in
+end
+
+en = enable
+
+NetOPS - JumpServer
+!@jumpserver
+root
+C1sc0123
+ip -4 addr
+
+GUI
+http://192.168.102.100:4000
+
+!@COREBABA
+config t
+ip domain-name rivanit.com
+username admin privilege 15 secret pass
+username echo privilege 15 secret pass
+crypto key generate rsa
+
+How many bits in the modulus [512]: 2048
+
+ip ssh version 2
+line vty 0 14
+login local
+transport input ssh
+end
+
+show ip ssh
+wr er - write erase
+
+Simple Network Mapping Protocol - SNMP
+
+!@zabbix creds
+root
+zabbix
+systemctl restart zabbix-server
+dnf install net-snmp-utils -y
+
+ip addr
+
+Admin
+zabbix
+
+!@put in for snmpV2 CSR1000V
+conf t
+access-list 10 permit 192.168.1.10 - replace with IP of zbix 208.8.8.142 = access-list 10 permit 208.8.8.142
+snmp-server community public RO 10
+end
+
+!@!@ SNMPV3 csr1000v
+conf t
+snmp-server group zabbix v3 priv
+snmp-server user admin zabbix v3 auth sha C1sc0123 priv aes 128 C1sc0123
+end
