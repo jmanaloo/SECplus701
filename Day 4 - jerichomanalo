@@ -1,0 +1,69 @@
+download vm, zabbix wazuh, d3
+create agent for chatgpt
+
+network drive - map network drive
+
+# Create self-signed certificate for www.bpi.ph.com
+$cert = New-SelfSignedCertificate -DnsName "www.bpi.ph.com" -CertStoreLocation "Cert:\LocalMachine\My"
+
+# Bind HTTPS to website with correct cert
+$siteName = "bpi.ph.com"
+$hostname = "www.bpi.ph.com"
+$certThumbprint = $cert.Thumbprint
+
+# Ensure SSL binding
+New-WebBinding -Name $siteName -Protocol https -Port 443 -HostHeader $hostname
+
+# Bind certificate to HTTPS binding
+Push-Location IIS:\SslBindings
+New-Item "0.0.0.0!443!$hostname" -Thumbprint $certThumbprint -SSLFlags 1
+Pop-Location
+
+# OPTIONAL: Import cert into Trusted Root if you want local trust automatically
+$certPath = "Cert:\LocalMachine\My\$certThumbprint"
+$rootStore = New-Object System.Security.Cryptography.X509Certificates.X509Store("Root","LocalMachine")
+$rootStore.Open("ReadWrite")
+$rootStore.Add((Get-Item $certPath))
+$rootStore.Close()
+
+# Restart IIS
+iisreset
+
+Active Directory Certificate Services - puts certificates on websites
+
+Install-WindowsFeature  -name dns  -includeManagementTools
+Add-DnsServerPrimaryZone -Name "ngcpM.ph" -ZoneFile "ngcpM.ph.dns"
+add-DnsServerResourceRecord -zonename ngcpM.ph -A -name ns  -ipv4address 10.m.1.8
+add-DnsServerResourceRecord -zonename ngcpM.ph -Cname -name www -hostname ns.ngcpM.ph
+add-DnsServerResourceRecord -zonename ngcpM.ph -Cname -name imap -hostname ns.ngcpM.ph
+add-DnsServerResourceRecord -zonename ngcpM.ph -Cname -name pop -hostname ns.ngcpM.ph
+add-DnsServerResourceRecord -zonename ngcpM.ph -Cname -name smtp -hostname ns.ngcpM.ph
+###FOR CISCO DEVICES DNS RECORDS;
+add-DnsServerResourceRecord -zonename ngcpM.ph -A -name cb  -ipv4address 10.m.1.4
+add-DnsServerResourceRecord -zonename ngcpM.ph -A -name ct  -ipv4address 10.m.1.2
+add-DnsServerResourceRecord -zonename ngcpM.ph -A -name cm  -ipv4address 10.m.100.8
+add-DnsServerResourceRecord -zonename ngcpM.ph -A -name ed  -ipv4address 10.m.m.1
+add-DnsServerResourceRecord -zonename ngcpM.ph -A -name p1  -ipv4address 10.m.100.101
+add-DnsServerResourceRecord -zonename ngcpM.ph -A -name p2  -ipv4address 10.m.100.102
+add-DnsServerResourceRecord -zonename ngcpM.ph -A -name c1  -ipv4address 10.m.50.6
+add-DnsServerResourceRecord -zonename ngcpM.ph -A -name c2  -ipv4address 10.m.50.8
+add-DnsServerResourceRecord -zonename ngcpM.ph -A -name ap  -ipv4address 10.m.10.3
+
+network configure
+ping vmware - get ipv4 - open securecrt - connect to ip of vmware - ping ipv4 to see connection
+
+conf t
+aaa new-model
+username admin password pass
+radius-server host 10.21.1.8 key aaaaaaaa
+ip radius source vlan 1
+aaa authorization exec default group radius
+aaa authentication login default group radius local
+line vty 0 14
+login authentication default
+end
+
+DORAC - discover offer request access
+
+no aaa new-model
+
