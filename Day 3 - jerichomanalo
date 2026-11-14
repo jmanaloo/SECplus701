@@ -8,7 +8,7 @@ Jumpserver - open source, replacement of PuTTY
 wazzuh.vmx install - i copied it if prompted
 wazuh credentials
 root
-c1sc0123
+c1sc0123..
 to off firewall: systemctl stop firewalld.service
 to check ip: ip addr
 port checker: nmap -v (ip address) once port is checked, go to https://(ip address) 
